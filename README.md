@@ -1,6 +1,6 @@
 # E-Commerce Data Analysis Plan
 
-This project outlines a comprehensive set of analyses to be performed on an e-commerce dataset, ranging from basic metrics to advanced business intelligence and predictive modeling.
+This project outlines a comprehensive set of analyses to be performed on an e-commerce dataset, ranging from basic metrics to advanced business intelligence and predictive modeling.  
 
 ### Simple Analyses
 1. **Customer Demographics Analysis**  
@@ -126,3 +126,178 @@ This project outlines a comprehensive set of analyses to be performed on an e-co
     - Are there products with unexpected sales drops despite high stock and good reviews?
 
 These analyses range from descriptive (simple) to predictive and prescriptive (complex), covering customer behavior, product performance, operational efficiency, and strategic opportunities. Each question or scenario is designed to uncover potential problems or growth levers for the company.
+
+
+
+---
+
+### **Goal: Perform Cohort Analysis and Calculate CLV (Customer Lifetime Value)**  
+We want to understand how valuable our customers are over time and how retention and churn evolve in monthly cohorts.
+
+---
+
+### **Section 1: Calculate `grand_total` for Each Order**
+
+**Target**  
+Calculate the total monetary value (grand total) of each order.
+
+**Importance**  
+This is crucial because Customer Lifetime Value depends on how much a customer spends — we need accurate total order values to analyze revenue per customer over time.
+
+**Implementation**  
+I’ve created a **view named `grand_total`** that adds the product of price and quantity for each order, then adds tax and shipping cost, and subtracts any discount applied. This ensures each order has its correct revenue.
+
+```sql
+CREATE OR REPLACE VIEW grand_total AS
+WITH find_grand_total AS (
+  SELECT order_id, SUM(aup.price * oi.quantity) AS total
+  FROM order_items oi
+  LEFT JOIN all_unique_products aup ON oi.product_id = aup.product_id
+  GROUP BY order_id
+)
+SELECT o.order_id, (fgt.total + o.tax_amount + o.shipping_cost - o.discount_applied) AS grand_total
+FROM orders o
+LEFT JOIN find_grand_total fgt ON o.order_id = fgt.order_id;
+```
+
+---
+
+### **Section 2: Perform Cohort Analysis**
+
+**Target**  
+Group customers into cohorts based on their first purchase month and track their monthly activity since that first purchase.
+
+**Importance**  
+This helps visualize customer behavior over time — like retention, churn, and engagement — which is key for measuring loyalty and business health.
+
+**Implementation**  
+I’ve assigned each customer to their first transaction month, then calculated how many months have passed since that transaction for each order. This helps build month-by-month cohort behavior.
+
+```sql
+WITH cohort_analysis AS (
+  SELECT 
+    customer_id,
+    DATE_TRUNC('month', MIN(order_date) OVER (PARTITION BY customer_id)) AS FirstTransactionMonth,
+    EXTRACT(YEAR FROM AGE(order_date, MIN(order_date) OVER (PARTITION BY customer_id))) * 12 +
+    EXTRACT(MONTH FROM AGE(order_date, MIN(order_date) OVER (PARTITION BY customer_id))) AS MonthsSinceFirstTransaction
+  FROM orders
+)
+```
+
+---
+
+### **Section 3: Count Monthly Active Customers per Cohort (Retention)**
+
+**Target**  
+Count how many customers from each cohort returned in Month 1, 2, ..., up to Month 15.
+
+**Importance**  
+This shows retention behavior — how well we’re keeping customers month after month. The Month 0 count is the size of the original cohort.
+
+**Implementation**  
+I used `COUNT` with `CASE` statements for each month since the first transaction, grouping by cohort start month. This creates a wide format table of retention counts.
+
+```sql
+cohort_counts AS (
+  SELECT FirstTransactionMonth,
+    COUNT(CASE WHEN MonthsSinceFirstTransaction = 0 THEN customer_id ELSE NULL END) AS Month_0,
+    ...
+    COUNT(CASE WHEN MonthsSinceFirstTransaction = 15 THEN customer_id ELSE NULL END) AS Month_15
+  FROM cohort_analysis
+  GROUP BY FirstTransactionMonth
+)
+```
+
+---
+
+### **Section 4: Calculate Monthly Churn Rate per Cohort**
+
+**Target**  
+Determine how many customers dropped off month by month for each cohort.
+
+**Importance**  
+Churn rate helps us identify how fast we’re losing customers — which is critical for improving customer retention strategies.
+
+**Implementation**  
+I calculated churn by comparing each month’s customer count to the Month 0 count using the formula `1 - (Month_N / Month_0)` and handled division by zero using `NULLIF()`.
+
+```sql
+SELECT
+  TO_CHAR(FirstTransactionMonth, 'YYYY-Mon') AS COHORT_MONTH,
+  Month_0,
+  ROUND(1 - (Month_1::DECIMAL / NULLIF(Month_0, 0)), 2) AS Churn_1,
+  ...
+  ROUND(1 - (Month_15::DECIMAL / NULLIF(Month_0, 0)), 2) AS Churn_15
+FROM cohort_counts
+```
+
+---
+
+### **Section 5: Calculate CLV per Cohort**
+
+**Target**  
+Calculate how much revenue each cohort generates per month (Month 0 to 15).
+
+**Importance**  
+This helps us understand how customer spending behavior changes over time, which is vital for revenue forecasting and marketing ROI.
+
+**Implementation**  
+I joined `orders` with the `grand_total` view and then grouped orders by customer and month. I used `SUM(CASE WHEN ...)` for each month to aggregate revenue per cohort.
+
+```sql
+WITH customer_orders AS (...),
+first_transactions AS (...),
+cohort_analysis AS (...),
+customer_lifetime_value AS (
+  SELECT
+    first_transaction_month,
+    SUM(CASE WHEN months_since_first = 0 THEN grand_total ELSE 0 END) AS Month_0,
+    ...
+    SUM(CASE WHEN months_since_first = 15 THEN grand_total ELSE 0 END) AS Month_15
+  FROM cohort_analysis
+  GROUP BY first_transaction_month
+)
+```
+
+---
+
+### **Section 6: Display CLV Report**
+
+**Target**  
+Display monthly CLV amounts for each cohort.
+
+**Importance**  
+This helps in visually analyzing which cohort performed better in terms of revenue.
+
+**Implementation**  
+I selected cohort month and revenue values from Month 0 to Month 15 from the `customer_lifetime_value` CTE and displayed them in a readable format.
+
+```sql
+SELECT TO_CHAR(first_transaction_month, 'YYYY-Mon') AS cohort_month,
+       Month_0, Month_1, ..., Month_15
+FROM customer_lifetime_value;
+```
+
+---
+
+### **Section 7: Calculate Total CLV**
+
+**Target**  
+Get a single value representing total customer lifetime value across all cohorts and months.
+
+**Importance**  
+This gives us an overview of total revenue generated over time from all customers — essential for financial analysis.
+
+**Implementation**  
+I added all month columns together and summed them across rows to get total CLV.
+
+```sql
+SELECT 
+  SUM(
+    Month_0 + Month_1 + Month_2 + ... + Month_15
+  ) AS total_clv
+FROM customer_lifetime_value;
+-- Total CLV = 103045109.14
+```
+
+---
