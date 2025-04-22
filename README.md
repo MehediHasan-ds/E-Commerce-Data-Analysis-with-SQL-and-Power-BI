@@ -2,6 +2,8 @@
 
 This project outlines a comprehensive set of analyses to be performed on an e-commerce dataset, ranging from basic metrics to advanced business intelligence and predictive modeling.  
 
+step by step data processing and analysis are stored here: https://docs.google.com/document/d/1abebqsE34jJFqVtDfr_EtFKU9kB2iUx5ocDSNXNeU14/edit?usp=sharing
+
 ### Simple Analyses
 1. **Customer Demographics Analysis**  
    - What is the distribution of customers by age, gender, city, state, and country?  
