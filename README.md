@@ -292,7 +292,7 @@ Understanding customer demographics and behavior is crucial for targeted marketi
    FROM RFM_SEGMENTATIONS;
    ```
 
-### Step 7: Churn Analysis
+### Step 7: Retention and Churn Analysis
 
 1. **Churn Rate Calculation**:
    - **Description**: Calculate the churn rate for customers based on their first transaction month.
@@ -350,6 +350,66 @@ Understanding customer demographics and behavior is crucial for targeted marketi
    FROM cohort_counts
    ORDER BY FirstTransactionMonth;
    ```
+
+### Step 8: Customer Lifetime Value(CLV) Analysis
+
+1. **CLTV Calculation**:
+  - **Description**:Description: Calculate the Customer Lifetime Value (CLTV) for each cohort of customers.
+  - **Description**:Core Functions: WITH (CTE), DATE_TRUNC, EXTRACT, SUM, GROUP BY.
+  - **Description**:Skills Gained: Common Table Expressions (CTEs), date manipulation, aggregation, and window functions.
+  ```sql
+  WITH customer_orders AS (
+    SELECT
+        o.customer_id,
+        DATE_TRUNC('month', o.order_date) AS order_month,
+        gt.grand_total
+    FROM orders o
+    JOIN grand_total gt ON o.order_id = gt.order_id
+  ),
+  first_transactions AS (
+      SELECT
+          customer_id,
+          MIN(order_month) AS first_transaction_month
+      FROM customer_orders
+      GROUP BY customer_id
+  ),
+  cohort_analysis AS (
+      SELECT
+          co.customer_id,
+          ft.first_transaction_month,
+          EXTRACT(YEAR FROM AGE(co.order_month, ft.first_transaction_month)) * 12 +
+          EXTRACT(MONTH FROM AGE(co.order_month, ft.first_transaction_month)) AS months_since_first,
+          co.grand_total
+      FROM customer_orders co
+      JOIN first_transactions ft ON co.customer_id = ft.customer_id
+  ),
+  customer_lifetime_value AS (
+      SELECT
+          first_transaction_month,
+          SUM(CASE WHEN months_since_first = 0 THEN grand_total ELSE 0 END) AS Month_0,
+          SUM(CASE WHEN months_since_first = 1 THEN grand_total ELSE 0 END) AS Month_1,
+          SUM(CASE WHEN months_since_first = 2 THEN grand_total ELSE 0 END) AS Month_2,
+          SUM(CASE WHEN months_since_first = 3 THEN grand_total ELSE 0 END) AS Month_3,
+          SUM(CASE WHEN months_since_first = 4 THEN grand_total ELSE 0 END) AS Month_4,
+          SUM(CASE WHEN months_since_first = 5 THEN grand_total ELSE 0 END) AS Month_5,
+          SUM(CASE WHEN months_since_first = 6 THEN grand_total ELSE 0 END) AS Month_6,
+          SUM(CASE WHEN months_since_first = 7 THEN grand_total ELSE 0 END) AS Month_7,
+          SUM(CASE WHEN months_since_first = 8 THEN grand_total ELSE 0 END) AS Month_8,
+          SUM(CASE WHEN months_since_first = 9 THEN grand_total ELSE 0 END) AS Month_9,
+          SUM(CASE WHEN months_since_first = 10 THEN grand_total ELSE 0 END) AS Month_10,
+          SUM(CASE WHEN months_since_first = 11 THEN grand_total ELSE 0 END) AS Month_11,
+          SUM(CASE WHEN months_since_first = 12 THEN grand_total ELSE 0 END) AS Month_12,
+          SUM(CASE WHEN months_since_first = 13 THEN grand_total ELSE 0 END) AS Month_13,
+          SUM(CASE WHEN months_since_first = 14 THEN grand_total ELSE 0 END) AS Month_14,
+          SUM(CASE WHEN months_since_first = 15 THEN grand_total ELSE 0 END) AS Month_15
+      FROM cohort_analysis
+      GROUP BY first_transaction_month
+      ORDER BY first_transaction_month
+  )
+  SELECT TO_CHAR(first_transaction_month, 'YYYY-Mon') AS cohort_month, Month_0, Month_1, Month_2, Month_3, Month_4, Month_5, Month_6, Month_7, Month_8, Month_9, Month_10, Month_11, Month_12, Month_13, Month_14, Month_15
+  FROM customer_lifetime_value;
+
+  ```
 
 
 # Product Analysis
@@ -464,8 +524,17 @@ Analyze product trends to optimize marketing strategies and improve customer ret
 
 ### Step 3: Pricing Strategy Analysis
 
+
 1. **Price Impact Analysis**:
    - **Description**: Analyze the impact of price changes on revenue.
+   - **Implementation Process**:
+      1. **Create Monthly Product Data**: Aggregate data to calculate the average price, total quantity, and revenue for each product per month.
+      2. **Calculate Lag Values**: Use the `LAG` function to get the previous month's values for price, quantity, and revenue.
+      3. **Calculate Percentage Changes**: Compute the percentage change in price, quantity, and revenue between the current and previous month.
+      4. **Filter Results**: Only include rows where the previous month's price is not null to avoid division by zero errors.
+    - **Main Logic**:
+      - The core logic involves time-series analysis to understand the impact of price changes. The `LAG` function is crucial for comparing current and previous values, and the percentage change calculations help in quantifying the impact.
+
    - **Core Functions**: `CREATE OR REPLACE FUNCTION`, `WITH` (CTE), `JOIN`, `LAG`, `ROUND`, `GROUP BY`.
    - **Skills Gained**: Function creation, Common Table Expressions (CTEs), window functions, and numerical rounding.
    ```sql
@@ -535,6 +604,15 @@ Analyze product trends to optimize marketing strategies and improve customer ret
 
 1. **Outliers in Order Amount**:
    - **Description**: Identify outliers in order quantities that may indicate errors or fraud.
+   
+   - **Implementation Process**:
+      1. **Calculate Percentiles**: Use the `PERCENTILE_CONT` function to determine the 25th (Q1) and 75th (Q3) percentiles of the order quantities.
+      2. **Calculate IQR**: Compute the Interquartile Range (IQR) as the difference between Q3 and Q1.
+      3. **Determine Bounds**: Calculate the lower and upper bounds using the formula `Q1 - 1.5 * IQR` and `Q3 + 1.5 * IQR`.
+      4. **Identify Outliers**: Flag orders as 'Below (Possible Error)', 'Fraud', or 'Normal' based on whether the quantity falls outside the bounds.
+   - **Main Logic**:
+     - The core logic involves statistical calculations to identify outliers. The `PERCENTILE_CONT` function is used to find the quartiles, and the IQR is used to set the bounds for detecting anomalies. The `CASE` statement then categorizes each order based on its quantity.
+
    - **Core Functions**: `WITH` (CTE), `PERCENTILE_CONT`, `CROSS JOIN`, `CASE`.
    - **Skills Gained**: Common Table Expressions (CTEs), percentile calculation, and conditional logic.
    ```sql
@@ -570,6 +648,14 @@ Analyze product trends to optimize marketing strategies and improve customer ret
 
 2. **Unusual Session Behavior**:
    - **Description**: Identify sessions with unusually short or long durations.
+
+   - **Implementation Process**:
+      1. **Calculate Mean and Standard Deviation**: Use the `AVG` and `STDDEV` functions to compute the mean and standard deviation of session durations.
+      2. **Calculate Z-Scores**: Compute the z-score for each session duration using the formula `(session_duration - mean) / stddev`.
+      3. **Identify Unusual Sessions**: Flag sessions as 'Unusual' if the absolute value of the z-score is greater than 3, otherwise flag as 'Normal'.
+    - **Main Logic**:
+      - The main logic here is to use statistical measures to identify sessions that deviate significantly from the norm. The z-score helps in determining how many standard deviations a session duration is from the mean, and sessions with high z-scores are flagged as unusual.
+
    - **Core Functions**: `WITH` (CTE), `AVG`, `STDDEV`, `CROSS JOIN`, `CASE`.
    - **Skills Gained**: Common Table Expressions (CTEs), standard deviation calculation, and conditional logic.
    ```sql
@@ -600,3 +686,84 @@ Analyze product trends to optimize marketing strategies and improve customer ret
    ORDER BY z_score DESC;
    
    ```
+
+
+
+## Data Analysis Skills Gained
+
+Throughout this analysis, the following data analysis skills and techniques were developed and applied:
+
+1. **Data Preprocessing**:
+   - **Exploring Schemas, Columns, and Nulls**: Understanding the structure of the dataset, identifying columns, and checking for null values.
+   - **Duplicates**: Identifying and handling duplicate records in the dataset.
+   - **Missing Values**: Handling missing values by imputing or removing them.
+   - **Data Types Conversion**: Converting data types to ensure consistency and compatibility.
+
+2. **Anomaly Detection**:
+   - Identifying outliers using statistical methods like percentiles and z-scores.
+   - Applying conditional logic to flag anomalies in the data.
+
+3. **Pricing and Revenue Analysis**:
+   - Analyzing the impact of price changes on sales and revenue.
+   - Using lag functions to compare current and previous values.
+
+4. **Customer Segmentation**:
+   - Segmenting customers based on RFM (Recency, Frequency, Monetary) values.
+   - Creating views to store segmented data for further analysis.
+
+5. **Churn and CLTV Analysis**:
+   - Calculating churn rates and Customer Lifetime Value (CLTV) using cohort analysis.
+   - Understanding customer retention and lifetime value for strategic decision-making.
+
+6. **Product Recommendation**:
+   - Identifying frequently purchased products and subcategory combinations for bundling.
+   - Using market basket analysis to find product pairs that are often bought together.
+
+7. **Elasticity Analysis**:
+   - Calculating price elasticity of demand to understand how price changes affect quantity demanded.
+   - Applying linear regression and logarithmic transformations to calculate elasticity.
+
+
+## Tools and Functionalities Used
+
+1. **Data Aggregation and Grouping**:
+   - Summarizing data using `COUNT`, `SUM`, `AVG`, and `GROUP BY`.
+   - Understanding how to aggregate data at different levels (e.g., monthly, quarterly, yearly).
+
+2. **Conditional Logic**:
+   - Using `CASE` statements to create new categorical variables (e.g., age groups, gender labels).
+   - Applying conditional logic to filter and segment data.
+
+3. **Date and Time Manipulation**:
+   - Extracting and formatting dates using `TO_CHAR`, `DATE_TRUNC`, and `EXTRACT`.
+   - Calculating time differences and cohort analysis using date functions.
+
+4. **Window Functions**:
+   - Using window functions like `NTILE`, `LAG`, and `DENSE_RANK` to perform advanced analytics.
+   - Understanding how to partition data and apply window functions for ranking and trend analysis.
+
+5. **Common Table Expressions (CTEs)**:
+   - Utilizing `WITH` clauses to create temporary result sets for complex queries.
+   - Breaking down complex problems into manageable parts using CTEs.
+
+6. **Joining Tables**:
+   - Joining multiple tables to combine data from different sources.
+   - Understanding different types of joins (e.g., `INNER JOIN`, `LEFT JOIN`, `CROSS JOIN`, `SELF JOIN`, `FULL OUTER JOIN`) and their applications.
+
+7. **Statistical Functions**:
+   - Calculating percentiles, z-scores, and other statistical measures.
+
+8. **Numerical Rounding and Formatting**:
+   - Using `ROUND` and data type casting to format numerical data for better readability.
+   - Applying numerical rounding to ensure accurate calculations.
+
+9. **Stored Procedures**:
+   - Creating and executing stored procedures to encapsulate and reuse complex SQL logic.
+   - Using `CREATE PROCEDURE` to define stored procedures for repeated tasks.
+
+10. **PostgreSQL Functions**:
+    - Creating user-defined functions using `CREATE FUNCTION` to encapsulate reusable logic.
+    - Utilizing SQL languages to define functions for complex calculations and operations.
+
+By applying these skills and techniques, a comprehensive analysis of customer demographics, behavior, and product trends was conducted, providing valuable insights for targeted marketing, product development, and customer retention strategies.
+
