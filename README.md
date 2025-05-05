@@ -354,9 +354,9 @@ Understanding customer demographics and behavior is crucial for targeted marketi
 ### Step 8: Customer Lifetime Value(CLV) Analysis
 
 1. **CLTV Calculation**:
-  - **Description**:Description: Calculate the Customer Lifetime Value (CLTV) for each cohort of customers.
-  - **Description**:Core Functions: WITH (CTE), DATE_TRUNC, EXTRACT, SUM, GROUP BY.
-  - **Description**:Skills Gained: Common Table Expressions (CTEs), date manipulation, aggregation, and window functions.
+  - **Description**:Calculate the Customer Lifetime Value (CLTV) for each cohort of customers.
+  - **Core Functions**:WITH (CTE), DATE_TRUNC, EXTRACT, SUM, GROUP BY.
+  - **Skills Gained**: Common Table Expressions (CTEs), date manipulation, aggregation, and window functions.
   ```sql
   WITH customer_orders AS (
     SELECT
