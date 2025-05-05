@@ -1,305 +1,602 @@
-# E-Commerce Data Analysis Plan
+# E-Commerce Data Analysis
 
 This project outlines a comprehensive set of analyses to be performed on an e-commerce dataset, ranging from basic metrics to advanced business intelligence and predictive modeling.  
 
 step by step data processing and analysis are stored here: https://docs.google.com/document/d/1abebqsE34jJFqVtDfr_EtFKU9kB2iUx5ocDSNXNeU14/edit?usp=sharing
 
-### Simple Analyses
-1. **Customer Demographics Analysis**  
-   - What is the distribution of customers by age, gender, city, state, and country?  
-   - How does yearly income vary across different customer segments?  
-   - What is the average number of children per customer, and how does it correlate with purchasing behavior?
-
-2. **Customer Registration Trends**  
-   - How has customer registration trended over time (monthly/quarterly/yearly)?  
-   - Are there specific cities or states with higher registration rates?  
-   - What is the retention rate of customers post-registration?
-
-3. **Product Popularity Analysis**  
-   - Which products (by product_id or product_name) have the highest/lowest sales volume?  
-   - Which product categories and subcategories have the highest/lowest stock quantities?  
-   - What is the distribution of product prices and costs across categories?
-
-4. **Order Trends**  
-   - What are the monthly/quarterly trends in order volume and total_amount?  
-   - Which payment methods are most commonly used?  
-   - What is the average discount_applied and tax_amount per order?
-
-5. **Review Sentiment Analysis**  
-   - What is the distribution of ratings (1-5) across products?  
-   - Which products have the highest/lowest average ratings?  
-   - How frequently are reviews submitted relative to orders?
-
-6. **Basic Sales Metrics**  
-   - What is the average order value (total_amount) by customer segment (e.g., age, income, location)?  
-   - What percentage of orders include discounts?  
-   - How does shipping_cost vary by city, state, or country?
-
-7. **Stock and Supply Analysis**  
-   - Which products have low stock_quantity relative to their sales volume?  
-   - How frequently are products added (added_date) compared to their sales?  
-   - Which suppliers (supplier_id) contribute to the most/least popular products?
-
-### Intermediate Analyses
-8. **Customer Purchase Behavior**  
-   - What is the average number of orders per customer?  
-   - How does the frequency of purchases vary by customer demographics (age, gender, income)?  
-   - Which customers have high yearly_income but low order frequency?
-
-9. **Product Category Performance**  
-   - Which product categories/subcategories contribute the most to total revenue?  
-   - How does the profit margin (price - cost) vary across categories/subcategories?  
-   - Are there categories with high stock but low sales?
-
-10. **Order Fulfillment Analysis**  
-    - What is the average time between order_date and delivery_date?  
-    - How does delivery time vary by city, state, or country?  
-    - What percentage of orders have a shipment_date significantly delayed from order_date?
-
-11. **Payment Issues**  
-    - What is the rate of failed or pending payments (payment_status)?  
-    - How does payment_method correlate with payment_status?  
-    - Are there patterns in payment failures by customer segment or order size?
-
-12. **Customer Session Behavior**  
-    - What is the average session_duration and pages_visited per session?  
-    - How does device_type or browser impact session_duration or order conversion?  
-    - Are there differences in session behavior between high- and low-spending customers?
-
-13. **Geographic Sales Analysis**  
-    - Which cities/states/countries generate the highest/lowest revenue?  
-    - How does order_source (e.g., online, app, in-store) vary by geographic region?  
-    - Are there regions with high customer registrations but low order volumes?
-
-14. **Discount Impact**  
-    - How does discount_applied correlate with order volume or total_amount?  
-    - Are there products or categories where discounts lead to higher sales?  
-    - What is the relationship between discount_applied and customer retention?
-
-### Complex/Advanced Analyses
-15. **Customer Segmentation**  
-    - Can customers be clustered based on demographics, purchase frequency, and session behavior?  
-    - Which customer segments have the highest lifetime value (LTV)?  
-    - How do high-LTV customers differ from low-LTV customers in behavior and preferences?
-
-16. **Cohort Analysis**  
-    - What is the churn rate of customers (no orders after a certain period)?  
-    - Are there patterns in churn by demographics, order_source, or product preferences?  
-    - How does session behavior (e.g., pages_visited, session_duration) predict churn?
-
-17. **Product Recommendation Opportunities**  
-    - Which products are frequently purchased together (market basket analysis)?  
-    - Are there subcategory_id combinations that could be bundled to increase sales?  
-    - How do reviews (rating, review_text) influence subsequent purchases of similar products?
-
-18. **Pricing Strategy Analysis**  
-    - How does price elasticity vary across products or categories?  
-    - Are there products where a price increase/decrease could optimize revenue?  
-    - How does the gap between cost and price impact sales volume?
-
-19. **Customer Acquisition Analysis**  
-    - What is the cost of acquiring customers (based on order_source and first order)?  
-    - Which order_source channels yield the highest retention or LTV?  
-    - Are there seasonal patterns in customer acquisition by region?
-
-20. **Supply Chain Efficiency**  
-    - How does supplier_id performance correlate with stock_quantity and delivery_date?  
-    - Are there products with frequent stockouts that impact sales?  
-    - What is the relationship between added_date and sales velocity?
 
-21. **Funnel Conversion Analysis**  
-    - What is the conversion rate from customer_sessions to orders?  
-    - How do pages_visited and session_duration impact conversion rates?  
-    - Are there specific device_type or browser combinations with lower conversion rates?
-
-22. **Predictive Sales Modeling**  
-    - Can historical order data predict future sales by product or category?  
-    - What factors (e.g., discounts, reviews, stock) most strongly predict order volume?  
-    - How accurately can customer demographics predict repeat purchases?
-
-23. **Cross-Channel Behavior Analysis**  
-    - How does customer behavior differ across order_source (e.g., app vs. website)?  
-    - Are there customers who use multiple channels but have low order frequency?  
-    - How does session behavior on different devices impact order completion?
-
-24. **Anomaly Detection**  
-    - Are there outliers in order_amount, discount_applied, or shipping_cost that indicate errors or fraud?  
-    - Which customers exhibit unusual session behavior (e.g., extremely short/long sessions)?  
-    - Are there products with unexpected sales drops despite high stock and good reviews?
-
-These analyses range from descriptive (simple) to predictive and prescriptive (complex), covering customer behavior, product performance, operational efficiency, and strategic opportunities. Each question or scenario is designed to uncover potential problems or growth levers for the company.
-
-
-
----
-
-### **Goal: Perform Cohort Analysis and Calculate CLV (Customer Lifetime Value)**  
-We want to understand how valuable our customers are over time and how retention and churn evolve in monthly cohorts.
-
----
-
-### **Section 1: Calculate `grand_total` for Each Order**
-
-**Target**  
-Calculate the total monetary value (grand total) of each order.
-
-**Importance**  
-This is crucial because Customer Lifetime Value depends on how much a customer spends — we need accurate total order values to analyze revenue per customer over time.
-
-**Implementation**  
-I’ve created a **view named `grand_total`** that adds the product of price and quantity for each order, then adds tax and shipping cost, and subtracts any discount applied. This ensures each order has its correct revenue.
-
-```sql
-CREATE OR REPLACE VIEW grand_total AS
-WITH find_grand_total AS (
-  SELECT order_id, SUM(aup.price * oi.quantity) AS total
-  FROM order_items oi
-  LEFT JOIN all_unique_products aup ON oi.product_id = aup.product_id
-  GROUP BY order_id
-)
-SELECT o.order_id, (fgt.total + o.tax_amount + o.shipping_cost - o.discount_applied) AS grand_total
-FROM orders o
-LEFT JOIN find_grand_total fgt ON o.order_id = fgt.order_id;
-```
-
----
-
-### **Section 2: Perform Cohort Analysis**
-
-**Target**  
-Group customers into cohorts based on their first purchase month and track their monthly activity since that first purchase.
-
-**Importance**  
-This helps visualize customer behavior over time — like retention, churn, and engagement — which is key for measuring loyalty and business health.
-
-**Implementation**  
-I’ve assigned each customer to their first transaction month, then calculated how many months have passed since that transaction for each order. This helps build month-by-month cohort behavior.
-
-```sql
-WITH cohort_analysis AS (
-  SELECT 
-    customer_id,
-    DATE_TRUNC('month', MIN(order_date) OVER (PARTITION BY customer_id)) AS FirstTransactionMonth,
-    EXTRACT(YEAR FROM AGE(order_date, MIN(order_date) OVER (PARTITION BY customer_id))) * 12 +
-    EXTRACT(MONTH FROM AGE(order_date, MIN(order_date) OVER (PARTITION BY customer_id))) AS MonthsSinceFirstTransaction
-  FROM orders
-)
-```
-
----
-
-### **Section 3: Count Monthly Active Customers per Cohort (Retention)**
-
-**Target**  
-Count how many customers from each cohort returned in Month 1, 2, ..., up to Month 15.
-
-**Importance**  
-This shows retention behavior — how well we’re keeping customers month after month. The Month 0 count is the size of the original cohort.
-
-**Implementation**  
-I used `COUNT` with `CASE` statements for each month since the first transaction, grouping by cohort start month. This creates a wide format table of retention counts.
-
-```sql
-cohort_counts AS (
-  SELECT FirstTransactionMonth,
-    COUNT(CASE WHEN MonthsSinceFirstTransaction = 0 THEN customer_id ELSE NULL END) AS Month_0,
-    ...
-    COUNT(CASE WHEN MonthsSinceFirstTransaction = 15 THEN customer_id ELSE NULL END) AS Month_15
-  FROM cohort_analysis
-  GROUP BY FirstTransactionMonth
-)
-```
-
----
-
-### **Section 4: Calculate Monthly Churn Rate per Cohort**
-
-**Target**  
-Determine how many customers dropped off month by month for each cohort.
-
-**Importance**  
-Churn rate helps us identify how fast we’re losing customers — which is critical for improving customer retention strategies.
-
-**Implementation**  
-I calculated churn by comparing each month’s customer count to the Month 0 count using the formula `1 - (Month_N / Month_0)` and handled division by zero using `NULLIF()`.
-
-```sql
-SELECT
-  TO_CHAR(FirstTransactionMonth, 'YYYY-Mon') AS COHORT_MONTH,
-  Month_0,
-  ROUND(1 - (Month_1::DECIMAL / NULLIF(Month_0, 0)), 2) AS Churn_1,
-  ...
-  ROUND(1 - (Month_15::DECIMAL / NULLIF(Month_0, 0)), 2) AS Churn_15
-FROM cohort_counts
-```
-
----
-
-### **Section 5: Calculate CLV per Cohort**
-
-**Target**  
-Calculate how much revenue each cohort generates per month (Month 0 to 15).
-
-**Importance**  
-This helps us understand how customer spending behavior changes over time, which is vital for revenue forecasting and marketing ROI.
-
-**Implementation**  
-I joined `orders` with the `grand_total` view and then grouped orders by customer and month. I used `SUM(CASE WHEN ...)` for each month to aggregate revenue per cohort.
-
-```sql
-WITH customer_orders AS (...),
-first_transactions AS (...),
-cohort_analysis AS (...),
-customer_lifetime_value AS (
-  SELECT
-    first_transaction_month,
-    SUM(CASE WHEN months_since_first = 0 THEN grand_total ELSE 0 END) AS Month_0,
-    ...
-    SUM(CASE WHEN months_since_first = 15 THEN grand_total ELSE 0 END) AS Month_15
-  FROM cohort_analysis
-  GROUP BY first_transaction_month
-)
-```
-
----
-
-### **Section 6: Display CLV Report**
-
-**Target**  
-Display monthly CLV amounts for each cohort.
-
-**Importance**  
-This helps in visually analyzing which cohort performed better in terms of revenue.
-
-**Implementation**  
-I selected cohort month and revenue values from Month 0 to Month 15 from the `customer_lifetime_value` CTE and displayed them in a readable format.
-
-```sql
-SELECT TO_CHAR(first_transaction_month, 'YYYY-Mon') AS cohort_month,
-       Month_0, Month_1, ..., Month_15
-FROM customer_lifetime_value;
-```
-
----
-
-### **Section 7: Calculate Total CLV**
-
-**Target**  
-Get a single value representing total customer lifetime value across all cohorts and months.
-
-**Importance**  
-This gives us an overview of total revenue generated over time from all customers — essential for financial analysis.
-
-**Implementation**  
-I added all month columns together and summed them across rows to get total CLV.
-
-```sql
-SELECT 
-  SUM(
-    Month_0 + Month_1 + Month_2 + ... + Month_15
-  ) AS total_clv
-FROM customer_lifetime_value;
--- Total CLV = 103045109.14
-```
-
----
+# Customer Demographics and Behavior Analysis
+
+## Target
+Analyze customer demographics, behavior, and product trends to optimize marketing strategies and improve customer retention.
+
+## Importance
+Understanding customer demographics and behavior is crucial for targeted marketing, product development, and improving customer satisfaction and retention.
+
+## Implementation Steps
+
+### Step 1: Customer Demographics Analysis
+
+1. **Total Customers**:
+   - **Description**: Count the total number of unique customers.
+   - **Core Function**: `COUNT(DISTINCT customer_id)`
+   - **Skills Gained**: Basic SQL aggregation and distinct counting.
+   ```sql
+   SELECT COUNT(DISTINCT customer_id) FROM orders;
+   ```
+
+2. **Total Customers by Age Group**:
+   - **Description**: Categorize customers into age groups and count the number of customers in each group.
+   - **Core Functions**: `CASE` statements for age grouping, `COUNT`, `GROUP BY`.
+   - **Skills Gained**: Conditional logic in SQL, grouping, and aggregation.
+   ```sql
+   SELECT
+       CASE
+           WHEN age > 40 THEN 'Above 40'
+           WHEN age > 30 THEN '31-40'
+           WHEN age > 20 THEN '21-30'
+           ELSE '20 or below'
+       END AS age_group,
+       COUNT(DISTINCT o.customer_id) AS total_customers
+   FROM orders o
+   LEFT JOIN customers c ON o.customer_id = c.customer_id
+   GROUP BY
+       CASE
+           WHEN age > 40 THEN 'Above 40'
+           WHEN age > 30 THEN '31-40'
+           WHEN age > 20 THEN '21-30'
+           ELSE '20 or below'
+       END;
+   ```
+
+3. **Total Customers by Gender**:
+   - **Description**: Count the number of customers by gender.
+   - **Core Functions**: `CASE` statements for gender labeling, `COUNT`, `GROUP BY`.
+   - **Skills Gained**: Conditional logic, grouping, and aggregation.
+   ```sql
+   SELECT
+       CASE
+           WHEN gender = 'F' THEN 'Female'
+           WHEN gender = 'M' THEN 'Male'
+           ELSE 'Other'
+       END AS gender_label,
+       COUNT(DISTINCT o.customer_id) AS total_customers
+   FROM orders o
+   LEFT JOIN customers c ON o.customer_id = c.customer_id
+   GROUP BY gender_label;
+   ```
+
+4. **Total Customers by Country**:
+   - **Description**: Count the number of customers by country.
+   - **Core Functions**: `COUNT`, `GROUP BY`.
+   - **Skills Gained**: Basic grouping and aggregation.
+   ```sql
+   SELECT
+       o.country,
+       COUNT(DISTINCT o.customer_id) AS total_customers
+   FROM orders o
+   LEFT JOIN customers c ON o.customer_id = c.customer_id
+   GROUP BY o.country;
+   ```
+
+5. **Total Customers by Gender and Age Group**:
+   - **Description**: Count the number of customers by both gender and age group.
+   - **Core Functions**: `CASE` statements for gender and age grouping, `COUNT`, `GROUP BY`.
+   - **Skills Gained**: Nested conditional logic, grouping, and aggregation.
+   ```sql
+   SELECT
+       gender_label,
+       age_group,
+       COUNT(DISTINCT customer_id) AS total_customers
+   FROM (
+       SELECT
+           o.customer_id,
+           CASE
+               WHEN gender = 'F' THEN 'Female'
+               WHEN gender = 'M' THEN 'Male'
+               ELSE 'Other'
+           END AS gender_label,
+           CASE
+               WHEN c.age > 40 THEN 'Above 40'
+               WHEN c.age > 30 THEN '31-40'
+               WHEN c.age > 20 THEN '21-30'
+               ELSE '20 or below'
+           END AS age_group
+       FROM orders o
+       LEFT JOIN customers c ON o.customer_id = c.customer_id
+   ) AS age_gender
+   GROUP BY gender_label, age_group;
+   ```
+
+### Step 2: Customer Segmentation
+
+1. **Yearly Income by Customer Segment**:
+   - **Description**: Calculate the average yearly income for each customer segment.
+   - **Core Functions**: `JOIN`, `ROUND`, `AVG`, `GROUP BY`.
+   - **Skills Gained**: Joining tables, aggregation, and numerical rounding.
+   ```sql
+   SELECT "Customer Segment", ROUND(AVG(yearly_income)) AS AVG_yearly_income
+   FROM rfm_segmentation RS
+   JOIN customers C ON RS.customer_id = C.customer_id
+   GROUP BY "Customer Segment"
+   ORDER BY AVG_yearly_income DESC;
+   ```
+
+2. **Average Number of Children and Purchasing Behavior**:
+   - **Description**: Calculate the average sales amount for customers grouped by the number of children.
+   - **Core Functions**: `JOIN`, `ROUND`, `AVG`, `GROUP BY`.
+   - **Skills Gained**: Joining tables, aggregation, and numerical rounding.
+   ```sql
+   SELECT no_of_children, ROUND(AVG("TOTAL SALES AMOUNT")) AS AVG_SALES
+   FROM customers C
+   JOIN rfm_segmentation RS ON C.customer_id = RS.customer_id
+   GROUP BY no_of_children;
+   ```
+
+### Step 3: Customer Registration Trends
+
+1. **Monthly Registration Trends**:
+   - **Description**: Count the number of customer registrations per month.
+   - **Core Functions**: `TO_CHAR`, `DATE`, `COUNT`, `GROUP BY`, `ORDER BY`.
+   - **Skills Gained**: Date formatting, grouping, and ordering.
+   ```sql
+   SELECT
+       TO_CHAR(DATE(registration_date), 'YYYY-MM') AS month,
+       COUNT(customer_id) AS total_customer_registrations
+   FROM customers
+   GROUP BY month
+   ORDER BY month;
+   ```
+
+2. **Quarterly Registration Trends**:
+   - **Description**: Count the number of customer registrations per quarter.
+   - **Core Functions**: `CONCAT`, `EXTRACT`, `DATE`, `COUNT`, `GROUP BY`, `ORDER BY`.
+   - **Skills Gained**: Date extraction, grouping, and ordering.
+   ```sql
+   SELECT
+       CONCAT(EXTRACT(YEAR FROM DATE(registration_date)), '-Q',
+       EXTRACT(QUARTER FROM DATE(registration_date))) AS YEAR_QTR,
+       COUNT(customer_id) AS total_customer_registrations
+   FROM customers
+   GROUP BY EXTRACT(YEAR FROM DATE(registration_date)), EXTRACT(QUARTER FROM DATE(registration_date))
+   ORDER BY EXTRACT(YEAR FROM DATE(registration_date)), EXTRACT(QUARTER FROM DATE(registration_date));
+   ```
+
+3. **Yearly Registration Trends**:
+   - **Description**: Count the number of customer registrations per year.
+   - **Core Functions**: `EXTRACT`, `DATE`, `COUNT`, `GROUP BY`.
+   - **Skills Gained**: Date extraction and grouping.
+   ```sql
+   SELECT
+       EXTRACT(YEAR FROM DATE(registration_date)) AS YEAR,
+       COUNT(customer_id) AS TOTAL_CUSTOMER_REGISTRATION
+   FROM CUSTOMERS
+   GROUP BY YEAR;
+   ```
+
+4. **Cities with Highest Registration Rates**:
+   - **Description**: Identify the city with the highest registration rate in each country.
+   - **Core Functions**: `WITH` (CTE), `DENSE_RANK`, `COUNT`, `GROUP BY`.
+   - **Skills Gained**: Common Table Expressions (CTEs), window functions, and ranking.
+   ```sql
+   WITH TOTAL_REGISTRATIONS AS (
+       SELECT country, CITY, COUNT(customer_id) AS TOTAL_REG
+       FROM CUSTOMERS
+       GROUP BY COUNTRY, city
+   ),
+   RANKINGS AS (
+       SELECT
+           country,
+           city,
+           total_reg,
+           DENSE_RANK() OVER (PARTITION BY country ORDER BY total_reg DESC) AS rn
+       FROM TOTAL_REGISTRATIONS
+   )
+   SELECT
+       COUNTRY,
+       CITY,
+       TOTAL_REG
+   FROM RANKINGS
+   WHERE RN = 1;
+   ```
+
+### Step 4: Payment Issues
+
+1. **Rate of Returned or Failed Payments**:
+   - **Description**: Calculate the percentage of returned or failed payments.
+   - **Core Functions**: `WITH` (CTE), `COUNT`, `ROUND`, `GROUP BY`.
+   - **Skills Gained**: Common Table Expressions (CTEs), aggregation, and numerical rounding.
+   ```sql
+   WITH ALL_STATUS_PERCENTAGE AS (
+       SELECT
+           ORDER_STATUS,
+           COUNT(order_id) AS TOTAL,
+           ROUND(COUNT(order_id) / (SELECT COUNT(*) FROM ORDERS)::NUMERIC, 2) AS PERCENTAGE
+       FROM orders
+       GROUP BY order_status
+   )
+   SELECT
+       SUM(PERCENTAGE) AS PERC_RETURNED_FAILED
+   FROM ALL_STATUS_PERCENTAGE
+   WHERE order_status IN ('Returned', 'Cancelled');
+   ```
+
+### Step 5: Customer Session Behavior
+
+1. **Impact of Device Type or Browser on Session Duration**:
+   - **Description**: Calculate the total session hours for each combination of device type and browser.
+   - **Core Functions**: `ROUND`, `SUM`, `GROUP BY`, `ORDER BY`.
+   - **Skills Gained**: Aggregation, numerical rounding, and grouping.
+   ```sql
+   SELECT
+       device_type,
+       browser,
+       ROUND(SUM(session_duration) / 60 ::numeric, 2) AS TOTAL_SESSION_HOURS
+   FROM SESSIONS
+   GROUP BY device_type, browser
+   ORDER BY TOTAL_SESSION_HOURS DESC;
+   ```
+
+### Step 6: Advanced Customer Segmentation
+
+1. **RFM Segmentation**:
+   - **Description**: Create a view to segment customers based on Recency, Frequency, and Monetary value.
+   - **Core Functions**: `CREATE OR REPLACE VIEW`, `WITH` (CTE), `EXTRACT`, `NTILE`, `JOIN`, `GROUP BY`.
+   - **Skills Gained**: View creation, Common Table Expressions (CTEs), window functions, and joining tables.
+   ```sql
+   CREATE OR REPLACE VIEW RFM_SEGMENTATION AS
+   WITH RFM_DETAILS AS (
+       SELECT O.CUSTOMER_ID AS CUSTOMER_ID,
+           EXTRACT(DAY FROM AGE((SELECT MAX(order_date) FROM orders), MAX(order_date))) AS RECENCY_VALUE,
+           COUNT(O.order_id) AS FREQUENCY_VALUE,
+           SUM(grand_total) AS MONETARY_VALUE
+       FROM orders O
+       JOIN grand_total GT ON O.order_id = GT.order_id
+       WHERE O.order_status <> 'Cancelled'
+       GROUP BY O.customer_id
+   ),
+   RFM_SCORES AS (
+       SELECT
+           CUSTOMER_ID,
+           NTILE(5) OVER (ORDER BY RECENCY_VALUE DESC) AS R_SCORE,
+           NTILE(5) OVER (ORDER BY FREQUENCY_VALUE) AS F_SCORE,
+           NTILE(5) OVER (ORDER BY MONETARY_VALUE) AS M_SCORE
+       FROM RFM_DETAILS
+   ),
+   RFM_COMBINATION AS (
+       SELECT CUSTOMER_ID,
+           CONCAT(R_SCORE, F_SCORE, M_SCORE) AS RFM_SCORE
+       FROM RFM_SCORES
+   ),
+   RFM_SEGMENTATIONS AS (
+       SELECT
+           CONCAT(first_name, ' ', last_name) AS NAME,
+           C.age,
+           CASE
+               WHEN C.gender = 'M' THEN 'MALE'
+               WHEN C.gender = 'F' THEN 'FEMALE'
+               WHEN C.gender = 'Other' THEN 'NOT SPECIFIED'
+           END AS GENDER,
+           RECENCY_VALUE AS "LAST BUY (DAYS AGO)",
+           FREQUENCY_VALUE AS "TOTAL ORDERS",
+           ROUND(MONETARY_VALUE) AS "TOTAL SALES AMOUNT",
+           RC.RFM_SCORE,
+           CS."Customer Segment"
+       FROM RFM_COMBINATION RC
+       JOIN "Customer Segment" CS ON RC.RFM_SCORE::INTEGER = CS."RFM Score"
+       JOIN RFM_DETAILS RD ON RC.customer_id = RD.customer_id
+       JOIN customers C ON RC.customer_id = C.customer_id
+       ORDER BY RFM_SCORE DESC
+   )
+   SELECT *
+   FROM RFM_SEGMENTATIONS;
+   ```
+
+### Step 7: Churn Analysis
+
+1. **Churn Rate Calculation**:
+   - **Description**: Calculate the churn rate for customers based on their first transaction month.
+   - **Core Functions**: `WITH` (CTE), `DATE_TRUNC`, `EXTRACT`, `COUNT`, `DENSE_RANK`, `GROUP BY`.
+   - **Skills Gained**: Common Table Expressions (CTEs), date manipulation, aggregation, and window functions.
+   ```sql
+   WITH cohort_analysis AS (
+       SELECT
+           customer_id,
+           DATE(DATE_TRUNC('month', MIN(order_date) OVER (PARTITION BY customer_id))) AS FirstTransactionMonth,
+           EXTRACT(YEAR FROM AGE(order_date, MIN(DATE(order_date)) OVER (PARTITION BY customer_id))) * 12 +
+           EXTRACT(MONTH FROM AGE(order_date, MIN(DATE(order_date)) OVER (PARTITION BY customer_id))) AS MonthsSinceFirstTransaction
+       FROM orders
+   ),
+   cohort_counts AS (
+       SELECT FirstTransactionMonth,
+           COUNT(CASE WHEN MonthsSinceFirstTransaction = 0 THEN customer_id ELSE NULL END) AS Month_0,
+           COUNT(CASE WHEN MonthsSinceFirstTransaction = 1 THEN customer_id ELSE NULL END) AS Month_1,
+           COUNT(CASE WHEN MonthsSinceFirstTransaction = 2 THEN customer_id ELSE NULL END) AS Month_2,
+           COUNT(CASE WHEN MonthsSinceFirstTransaction = 3 THEN customer_id ELSE NULL END) AS Month_3,
+           COUNT(CASE WHEN MonthsSinceFirstTransaction = 4 THEN customer_id ELSE NULL END) AS Month_4,
+           COUNT(CASE WHEN MonthsSinceFirstTransaction = 5 THEN customer_id ELSE NULL END) AS Month_5,
+           COUNT(CASE WHEN MonthsSinceFirstTransaction = 6 THEN customer_id ELSE NULL END) AS Month_6,
+           COUNT(CASE WHEN MonthsSinceFirstTransaction = 7 THEN customer_id ELSE NULL END) AS Month_7,
+           COUNT(CASE WHEN MonthsSinceFirstTransaction = 8 THEN customer_id ELSE NULL END) AS Month_8,
+           COUNT(CASE WHEN MonthsSinceFirstTransaction = 9 THEN customer_id ELSE NULL END) AS Month_9,
+           COUNT(CASE WHEN MonthsSinceFirstTransaction = 10 THEN customer_id ELSE NULL END) AS Month_10,
+           COUNT(CASE WHEN MonthsSinceFirstTransaction = 11 THEN customer_id ELSE NULL END) AS Month_11,
+           COUNT(CASE WHEN MonthsSinceFirstTransaction = 12 THEN customer_id ELSE NULL END) AS Month_12,
+           COUNT(CASE WHEN MonthsSinceFirstTransaction = 13 THEN customer_id ELSE NULL END) AS Month_13,
+           COUNT(CASE WHEN MonthsSinceFirstTransaction = 14 THEN customer_id ELSE NULL END) AS Month_14,
+           COUNT(CASE WHEN MonthsSinceFirstTransaction = 15 THEN customer_id ELSE NULL END) AS Month_15
+       FROM cohort_analysis
+       GROUP BY FirstTransactionMonth
+       ORDER BY FirstTransactionMonth
+   )
+   SELECT
+       TO_CHAR(FirstTransactionMonth, 'YYYY-Mon') AS COHORT_MONTH,
+       Month_0,
+       ROUND(1 - (Month_1::DECIMAL / NULLIF(Month_0, 0)), 2) AS Churn_1,
+       ROUND(1 - (Month_2::DECIMAL / NULLIF(Month_0, 0)), 2) AS Churn_2,
+       ROUND(1 - (Month_3::DECIMAL / NULLIF(Month_0, 0)), 2) AS Churn_3,
+       ROUND(1 - (Month_4::DECIMAL / NULLIF(Month_0, 0)), 2) AS Churn_4,
+       ROUND(1 - (Month_5::DECIMAL / NULLIF(Month_0, 0)), 2) AS Churn_5,
+       ROUND(1 - (Month_6::DECIMAL / NULLIF(Month_0, 0)), 2) AS Churn_6,
+       ROUND(1 - (Month_7::DECIMAL / NULLIF(Month_0, 0)), 2) AS Churn_7,
+       ROUND(1 - (Month_8::DECIMAL / NULLIF(Month_0, 0)), 2) AS Churn_8,
+       ROUND(1 - (Month_9::DECIMAL / NULLIF(Month_0, 0)), 2) AS Churn_9,
+       ROUND(1 - (Month_10::DECIMAL / NULLIF(Month_0, 0)), 2) AS Churn_10,
+       ROUND(1 - (Month_11::DECIMAL / NULLIF(Month_0, 0)), 2) AS Churn_11,
+       ROUND(1 - (Month_12::DECIMAL / NULLIF(Month_0, 0)), 2) AS Churn_12,
+       ROUND(1 - (Month_13::DECIMAL / NULLIF(Month_0, 0)), 2) AS Churn_13,
+       ROUND(1 - (Month_14::DECIMAL / NULLIF(Month_0, 0)), 2) AS Churn_14,
+       ROUND(1 - (Month_15::DECIMAL / NULLIF(Month_0, 0)), 2) AS Churn_15
+   FROM cohort_counts
+   ORDER BY FirstTransactionMonth;
+   ```
+
+
+# Product Analysis
+
+## Target
+Analyze product trends to optimize marketing strategies and improve customer retention.
+
+
+### Step 1: Product Popularity Analysis
+
+1. **Highest/Lowest Sales Volume**:
+   - **Description**: Calculate the total quantity sold for each product.
+   - **Core Functions**: `SUM`, `GROUP BY`, `ORDER BY`.
+   - **Skills Gained**: Aggregation, grouping, and ordering.
+   ```sql
+   SELECT
+       OI.PRODUCT_ID,
+       product_name,
+       SUM(quantity) AS TOTAL_SOLD_QTY
+   FROM order_items OI
+   LEFT JOIN all_unique_products AUP ON OI.product_id = AUP.product_id
+   GROUP BY OI.product_id, product_name
+   ORDER BY TOTAL_SOLD_QTY DESC;
+   ```
+
+2. **Distribution of Product Prices and Costs**:
+   - **Description**: Calculate the average price, cost, total sold quantity, and revenue for each product category.
+   - **Core Functions**: `ROUND`, `AVG`, `SUM`, `GROUP BY`, `ORDER BY`.
+   - **Skills Gained**: Aggregation, numerical rounding, and joining multiple tables.
+   ```sql
+   SELECT
+       category_name,
+       ROUND(AVG(price)::numeric, 2) AS AVG_PRICE,
+       ROUND(AVG(cost)::numeric, 2) AS AVG_COST,
+       SUM(quantity) AS TOTAL_SOLD_QUANTITY,
+       ROUND(SUM(price * quantity)::numeric) AS REVENUE
+   FROM order_items OI
+   LEFT JOIN all_unique_products AUP ON OI.product_id = AUP.product_id
+   LEFT JOIN product_subcategory PS ON AUP.subcategory_id = PS.subcategory_id
+   LEFT JOIN product_category PC ON PS.category_id = PC.category_id
+   GROUP BY PC.category_name
+   ORDER BY TOTAL_SOLD_QUANTITY DESC, REVENUE DESC;
+   ```
+
+### Step 2: Product Recommendation Opportunities
+
+1. **Frequently Purchased Products**:
+   - **Description**: Identify products that are frequently purchased together.
+   - **Core Functions**: `WITH` (CTE), `JOIN`, `COUNT`, `GROUP BY`, `HAVING`.
+   - **Skills Gained**: Common Table Expressions (CTEs), joining tables, aggregation, and filtering.
+   ```sql
+   WITH order_products AS (
+       SELECT order_id, product_id
+       FROM order_items
+   ),
+   product_pairs AS (
+       SELECT
+           p1.product_id AS product_1,
+           p2.product_id AS product_2,
+           COUNT(*) AS times_bought_together
+       FROM order_products p1
+       JOIN order_products p2
+           ON p1.order_id = p2.order_id AND p1.product_id < p2.product_id
+       GROUP BY p1.product_id, p2.product_id
+       HAVING COUNT(*) > 1
+   )
+   SELECT
+       AUP1.product_name AS product_1,
+       AUP2.product_name AS product_2,
+       times_bought_together
+   FROM product_pairs pp
+   JOIN all_unique_products AUP1 ON pp.product_1 = AUP1.product_id
+   JOIN all_unique_products AUP2 ON pp.product_2 = AUP2.product_id
+   ORDER BY times_bought_together DESC
+   LIMIT 20;
+   ```
+
+2. **Subcategory Combinations for Bundling**:
+   - **Description**: Identify subcategory combinations that could be bundled to increase sales.
+   - **Core Functions**: `WITH` (CTE), `JOIN`, `COUNT`, `GROUP BY`, `HAVING`.
+   - **Skills Gained**: Common Table Expressions (CTEs), joining tables, aggregation, and filtering.
+   ```sql
+   WITH ORDER_PRODUCTS_SUB AS (
+       SELECT
+           order_id,
+           subcategory_id
+       FROM order_items OI
+       JOIN all_unique_products AUP
+           ON OI.product_id = AUP.product_id
+   ),
+   SUB_COMB AS (
+       SELECT
+           OPS1.subcategory_id AS subcategory_1,
+           OPS2.subcategory_id AS subcategory_2,
+           COUNT(*) AS FREQUENCY
+       FROM ORDER_PRODUCTS_SUB OPS1
+       JOIN ORDER_PRODUCTS_SUB OPS2
+           ON OPS1.order_id = OPS2.order_id AND OPS1.subcategory_id < OPS2.subcategory_id
+       GROUP BY OPS1.subcategory_id, OPS2.subcategory_id
+       HAVING (COUNT(*) > 1)
+   )
+   SELECT
+       PS1.subcategory_name AS SUBCATEGORY_1,
+       PS2.subcategory_name AS SUBCATEGORY_2,
+       FREQUENCY
+   FROM SUB_COMB SC
+   JOIN product_subcategory PS1 ON SC.SUBCATEGORY_1 = PS1.subcategory_id
+   JOIN product_subcategory PS2 ON SC.SUBCATEGORY_2 = PS2.subcategory_id
+   ORDER BY FREQUENCY DESC
+   LIMIT 10;
+   ```
+
+### Step 3: Pricing Strategy Analysis
+
+1. **Price Impact Analysis**:
+   - **Description**: Analyze the impact of price changes on revenue.
+   - **Core Functions**: `CREATE OR REPLACE FUNCTION`, `WITH` (CTE), `JOIN`, `LAG`, `ROUND`, `GROUP BY`.
+   - **Skills Gained**: Function creation, Common Table Expressions (CTEs), window functions, and numerical rounding.
+   ```sql
+   CREATE OR REPLACE FUNCTION analyze_price_impact(product TEXT)
+   RETURNS TABLE (
+       product_name TEXT,
+       month TEXT,
+       avg_price NUMERIC,
+       prev_price NUMERIC,
+       price_change_pct NUMERIC,
+       total_quantity INTEGER,
+       prev_quantity INTEGER,
+       quantity_change_pct NUMERIC,
+       revenue NUMERIC,
+       prev_revenue NUMERIC,
+       revenue_change_pct NUMERIC
+   )
+   LANGUAGE SQL
+   AS $$
+   WITH monthly_product_data AS (
+       SELECT
+           oi.product_id,
+           product_name,
+           DATE_TRUNC('month', order_date) AS order_month,
+           ROUND(AVG(price)::numeric, 2) AS avg_price,
+           SUM(quantity) AS total_quantity,
+           ROUND(SUM(price * quantity)::numeric, 2) AS revenue
+       FROM orders o
+       JOIN order_items oi ON o.order_id = oi.order_id
+       JOIN all_unique_products p ON oi.product_id = p.product_id
+       WHERE p.product_name = product
+       GROUP BY oi.product_id, p.product_name, order_month
+   ),
+   price_trend AS (
+       SELECT
+           product_id,
+           product_name,
+           order_month,
+           avg_price,
+           total_quantity,
+           revenue,
+           LAG(avg_price) OVER (PARTITION BY product_id ORDER BY order_month) AS prev_price,
+           LAG(total_quantity) OVER (PARTITION BY product_id ORDER BY order_month) AS prev_quantity,
+           LAG(revenue) OVER (PARTITION BY product_id ORDER BY order_month) AS prev_revenue
+       FROM monthly_product_data
+   )
+   SELECT
+       product_name,
+       TO_CHAR(order_month, 'YYYY-MON') AS month,
+       avg_price,
+       prev_price,
+       ROUND((avg_price - prev_price) / NULLIF(prev_price, 0) * 100, 2) AS price_change_pct,
+       total_quantity,
+       prev_quantity,
+       ROUND((total_quantity - prev_quantity) / NULLIF(prev_quantity, 0) * 100, 2) AS quantity_change_pct,
+       revenue,
+       prev_revenue,
+       ROUND((revenue - prev_revenue) / NULLIF(prev_revenue, 0) * 100, 2) AS revenue_change_pct
+   FROM price_trend
+   WHERE prev_price IS NOT NULL
+   ORDER BY product_id, order_month;
+   $$;
+   SELECT * FROM analyze_price_impact('Galaxy Tab S7');
+   ```
+
+### Step 4: Anomaly Detection
+
+1. **Outliers in Order Amount**:
+   - **Description**: Identify outliers in order quantities that may indicate errors or fraud.
+   - **Core Functions**: `WITH` (CTE), `PERCENTILE_CONT`, `CROSS JOIN`, `CASE`.
+   - **Skills Gained**: Common Table Expressions (CTEs), percentile calculation, and conditional logic.
+   ```sql
+   WITH stats AS (
+       SELECT
+           PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY quantity) AS q1,
+           PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY quantity) AS q3
+       FROM order_items
+   ),
+   iqr_calc AS (
+       SELECT
+           q1,
+           q3,
+           (q3 - q1) AS iqr,
+           (q1 - 1.5 * (q3 - q1)) AS lower_bound,
+           (q3 + 1.5 * (q3 - q1)) AS upper_bound
+       FROM stats
+   )
+   SELECT
+       o.order_id,
+       o.customer_id,
+       quantity,
+       CASE
+           WHEN quantity < I.lower_bound THEN 'Below (Possible Error)'
+           WHEN quantity > I.upper_bound THEN 'Fraud'
+           ELSE 'Normal'
+       END AS status
+   FROM orders O
+   JOIN order_items OI ON O.order_id = OI.order_id
+   CROSS JOIN iqr_calc I
+   ORDER BY quantity DESC;
+   ```
+
+2. **Unusual Session Behavior**:
+   - **Description**: Identify sessions with unusually short or long durations.
+   - **Core Functions**: `WITH` (CTE), `AVG`, `STDDEV`, `CROSS JOIN`, `CASE`.
+   - **Skills Gained**: Common Table Expressions (CTEs), standard deviation calculation, and conditional logic.
+   ```sql
+   WITH stats AS (
+       SELECT
+           AVG(session_duration) AS mean,
+           STDDEV(session_duration) AS stddev
+       FROM sessions
+   ),
+   z_score_calc AS (
+       SELECT
+           s.customer_id,
+           s.session_id,
+           s.session_duration,
+           (s.session_duration - st.mean) / NULLIF(st.stddev, 0) AS z_score
+       FROM sessions s
+       CROSS JOIN stats st
+   )
+   SELECT
+       customer_id,
+       session_id,
+       session_duration,
+       CASE
+           WHEN ABS(z_score) > 3 THEN 'Unusual'
+           ELSE 'Normal'
+       END AS session_status
+   FROM z_score_calc
+   ORDER BY z_score DESC;
+   
+   ```
