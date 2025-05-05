@@ -48,7 +48,7 @@ Understanding customer demographics and behavior is crucial for targeted marketi
            ELSE '20 or below'
        END;
    ```
-![Output: ](output_images\1.png)
+![Output: ](output_images/1.png)
 
 3. **Total Customers by Gender**:
    - **Description**: Count the number of customers by gender.
