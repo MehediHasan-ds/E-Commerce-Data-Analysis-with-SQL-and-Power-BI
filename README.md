@@ -108,6 +108,7 @@ Understanding customer demographics and behavior is crucial for targeted marketi
    ) AS age_gender
    GROUP BY gender_label, age_group;
    ```
+![Output: ](output_images/1_5.png)
 
 ### Step 2: Customer Segmentation
 
@@ -122,6 +123,7 @@ Understanding customer demographics and behavior is crucial for targeted marketi
    GROUP BY "Customer Segment"
    ORDER BY AVG_yearly_income DESC;
    ```
+![Output:](output_images/2_1.png)
 
 2. **Average Number of Children and Purchasing Behavior**:
    - **Description**: Calculate the average sales amount for customers grouped by the number of children.
@@ -133,6 +135,7 @@ Understanding customer demographics and behavior is crucial for targeted marketi
    JOIN rfm_segmentation RS ON C.customer_id = RS.customer_id
    GROUP BY no_of_children;
    ```
+![Output:](output_images/2_2.png)
 
 ### Step 3: Customer Registration Trends
 
@@ -162,6 +165,8 @@ Understanding customer demographics and behavior is crucial for targeted marketi
    GROUP BY EXTRACT(YEAR FROM DATE(registration_date)), EXTRACT(QUARTER FROM DATE(registration_date))
    ORDER BY EXTRACT(YEAR FROM DATE(registration_date)), EXTRACT(QUARTER FROM DATE(registration_date));
    ```
+![Output:](output_images/3_2.png)
+
 
 3. **Yearly Registration Trends**:
    - **Description**: Count the number of customer registrations per year.
@@ -174,6 +179,8 @@ Understanding customer demographics and behavior is crucial for targeted marketi
    FROM CUSTOMERS
    GROUP BY YEAR;
    ```
+![Output:](output_images/3_3.png)
+
 
 4. **Cities with Highest Registration Rates**:
    - **Description**: Identify the city with the highest registration rate in each country.
@@ -200,6 +207,8 @@ Understanding customer demographics and behavior is crucial for targeted marketi
    FROM RANKINGS
    WHERE RN = 1;
    ```
+![Output:](output_images/3_4.png)
+
 
 ### Step 4: Payment Issues
 
@@ -237,6 +246,7 @@ Understanding customer demographics and behavior is crucial for targeted marketi
    GROUP BY device_type, browser
    ORDER BY TOTAL_SESSION_HOURS DESC;
    ```
+![Output:](output_images/5.png)
 
 ### Step 6: Advanced Customer Segmentation
 
@@ -292,6 +302,7 @@ Understanding customer demographics and behavior is crucial for targeted marketi
    SELECT *
    FROM RFM_SEGMENTATIONS;
    ```
+![Output:](output_images/6.png)
 
 ### Step 7: Retention and Churn Analysis
 
@@ -351,6 +362,8 @@ Understanding customer demographics and behavior is crucial for targeted marketi
    FROM cohort_counts
    ORDER BY FirstTransactionMonth;
    ```
+![Output:](output_images/retentionrate%20churnrate.png)
+
 
 ### Step 8: Customer Lifetime Value(CLV) Analysis
 
@@ -411,7 +424,7 @@ Understanding customer demographics and behavior is crucial for targeted marketi
   FROM customer_lifetime_value;
 
   ```
-
+![Output:](output_images/8.png)
 
 # Product Analysis
 
@@ -435,6 +448,7 @@ Analyze product trends to optimize marketing strategies and improve customer ret
    GROUP BY OI.product_id, product_name
    ORDER BY TOTAL_SOLD_QTY DESC;
    ```
+![Output:](output_images/p1_1.png)
 
 2. **Distribution of Product Prices and Costs**:
    - **Description**: Calculate the average price, cost, total sold quantity, and revenue for each product category.
@@ -454,6 +468,7 @@ Analyze product trends to optimize marketing strategies and improve customer ret
    GROUP BY PC.category_name
    ORDER BY TOTAL_SOLD_QUANTITY DESC, REVENUE DESC;
    ```
+![Output:](output_images/p_1_2.png)
 
 ### Step 2: Product Recommendation Opportunities
 
@@ -487,6 +502,7 @@ Analyze product trends to optimize marketing strategies and improve customer ret
    ORDER BY times_bought_together DESC
    LIMIT 20;
    ```
+![Output:](output_images/p2_1.png)
 
 2. **Subcategory Combinations for Bundling**:
    - **Description**: Identify subcategory combinations that could be bundled to increase sales.
@@ -522,6 +538,7 @@ Analyze product trends to optimize marketing strategies and improve customer ret
    ORDER BY FREQUENCY DESC
    LIMIT 10;
    ```
+![Output:](output_images/p2_2.png)
 
 ### Step 3: Pricing Strategy Analysis
 
@@ -600,6 +617,7 @@ Analyze product trends to optimize marketing strategies and improve customer ret
    $$;
    SELECT * FROM analyze_price_impact('Galaxy Tab S7');
    ```
+![Output:](output_images/p3.png)
 
 ### Step 4: Anomaly Detection
 
@@ -688,6 +706,7 @@ Analyze product trends to optimize marketing strategies and improve customer ret
    
    ```
 
+![Output:](output_images/p4_2.png)
 
 
 ## Data Analysis Skills Gained
