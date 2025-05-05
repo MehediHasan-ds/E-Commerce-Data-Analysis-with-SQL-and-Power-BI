@@ -4,6 +4,86 @@ This project outlines a comprehensive set of analyses to be performed on an e-co
 
 step by step data processing and analysis are stored here: https://docs.google.com/document/d/1abebqsE34jJFqVtDfr_EtFKU9kB2iUx5ocDSNXNeU14/edit?usp=sharing
 
+Before beginning I want to show you what I have gained from this Data Analysis project.
+## Data Analysis Skills Gained
+
+Throughout this analysis, the following data analysis skills and techniques were developed and applied:
+
+1. **Data Preprocessing**:
+   - **Exploring Schemas, Columns, and Nulls**: Understanding the structure of the dataset, identifying columns, and checking for null values.
+   - **Duplicates**: Identifying and handling duplicate records in the dataset.
+   - **Missing Values**: Handling missing values by imputing or removing them.
+   - **Data Types Conversion**: Converting data types to ensure consistency and compatibility.
+
+2. **Anomaly Detection**:
+   - Identifying outliers using statistical methods like percentiles and z-scores.
+   - Applying conditional logic to flag anomalies in the data.
+
+3. **Pricing and Revenue Analysis**:
+   - Analyzing the impact of price changes on sales and revenue.
+   - Using lag functions to compare current and previous values.
+
+4. **Customer Segmentation**:
+   - Segmenting customers based on RFM (Recency, Frequency, Monetary) values.
+   - Creating views to store segmented data for further analysis.
+
+5. **Churn and CLTV Analysis**:
+   - Calculating churn rates and Customer Lifetime Value (CLTV) using cohort analysis.
+   - Understanding customer retention and lifetime value for strategic decision-making.
+
+6. **Product Recommendation**:
+   - Identifying frequently purchased products and subcategory combinations for bundling.
+   - Using market basket analysis to find product pairs that are often bought together.
+
+7. **Elasticity Analysis**:
+   - Calculating price elasticity of demand to understand how price changes affect quantity demanded.
+   - Applying linear regression and logarithmic transformations to calculate elasticity.
+
+
+## Tools and Functionalities Used
+
+1. **Data Aggregation and Grouping**:
+   - Summarizing data using `COUNT`, `SUM`, `AVG`, and `GROUP BY`.
+   - Understanding how to aggregate data at different levels (e.g., monthly, quarterly, yearly).
+
+2. **Conditional Logic**:
+   - Using `CASE` statements to create new categorical variables (e.g., age groups, gender labels).
+   - Applying conditional logic to filter and segment data.
+
+3. **Date and Time Manipulation**:
+   - Extracting and formatting dates using `TO_CHAR`, `DATE_TRUNC`, and `EXTRACT`.
+   - Calculating time differences and cohort analysis using date functions.
+
+4. **Window Functions**:
+   - Using window functions like `NTILE`, `LAG`, and `DENSE_RANK` to perform advanced analytics.
+   - Understanding how to partition data and apply window functions for ranking and trend analysis.
+
+5. **Common Table Expressions (CTEs)**:
+   - Utilizing `WITH` clauses to create temporary result sets for complex queries.
+   - Breaking down complex problems into manageable parts using CTEs.
+
+6. **Joining Tables**:
+   - Joining multiple tables to combine data from different sources.
+   - Understanding different types of joins (e.g., `INNER JOIN`, `LEFT JOIN`, `CROSS JOIN`, `SELF JOIN`, `FULL OUTER JOIN`) and their applications.
+
+7. **Statistical Functions**:
+   - Calculating percentiles, z-scores, and other statistical measures.
+
+8. **Numerical Rounding and Formatting**:
+   - Using `ROUND` and data type casting to format numerical data for better readability.
+   - Applying numerical rounding to ensure accurate calculations.
+
+9. **Stored Procedures**:
+   - Creating and executing stored procedures to encapsulate and reuse complex SQL logic.
+   - Using `CREATE PROCEDURE` to define stored procedures for repeated tasks.
+
+10. **PostgreSQL Functions**:
+    - Creating user-defined functions using `CREATE FUNCTION` to encapsulate reusable logic.
+    - Utilizing SQL languages to define functions for complex calculations and operations.
+
+By applying these skills and techniques, a comprehensive analysis of customer demographics, behavior, and product trends was conducted, providing valuable insights for targeted marketing, product development, and customer retention strategies.
+
+
 
 # Customer Demographics and Behavior Analysis
 
@@ -708,82 +788,4 @@ Analyze product trends to optimize marketing strategies and improve customer ret
 
 ![Output:](output_images/p4_2.png)
 
-
-## Data Analysis Skills Gained
-
-Throughout this analysis, the following data analysis skills and techniques were developed and applied:
-
-1. **Data Preprocessing**:
-   - **Exploring Schemas, Columns, and Nulls**: Understanding the structure of the dataset, identifying columns, and checking for null values.
-   - **Duplicates**: Identifying and handling duplicate records in the dataset.
-   - **Missing Values**: Handling missing values by imputing or removing them.
-   - **Data Types Conversion**: Converting data types to ensure consistency and compatibility.
-
-2. **Anomaly Detection**:
-   - Identifying outliers using statistical methods like percentiles and z-scores.
-   - Applying conditional logic to flag anomalies in the data.
-
-3. **Pricing and Revenue Analysis**:
-   - Analyzing the impact of price changes on sales and revenue.
-   - Using lag functions to compare current and previous values.
-
-4. **Customer Segmentation**:
-   - Segmenting customers based on RFM (Recency, Frequency, Monetary) values.
-   - Creating views to store segmented data for further analysis.
-
-5. **Churn and CLTV Analysis**:
-   - Calculating churn rates and Customer Lifetime Value (CLTV) using cohort analysis.
-   - Understanding customer retention and lifetime value for strategic decision-making.
-
-6. **Product Recommendation**:
-   - Identifying frequently purchased products and subcategory combinations for bundling.
-   - Using market basket analysis to find product pairs that are often bought together.
-
-7. **Elasticity Analysis**:
-   - Calculating price elasticity of demand to understand how price changes affect quantity demanded.
-   - Applying linear regression and logarithmic transformations to calculate elasticity.
-
-
-## Tools and Functionalities Used
-
-1. **Data Aggregation and Grouping**:
-   - Summarizing data using `COUNT`, `SUM`, `AVG`, and `GROUP BY`.
-   - Understanding how to aggregate data at different levels (e.g., monthly, quarterly, yearly).
-
-2. **Conditional Logic**:
-   - Using `CASE` statements to create new categorical variables (e.g., age groups, gender labels).
-   - Applying conditional logic to filter and segment data.
-
-3. **Date and Time Manipulation**:
-   - Extracting and formatting dates using `TO_CHAR`, `DATE_TRUNC`, and `EXTRACT`.
-   - Calculating time differences and cohort analysis using date functions.
-
-4. **Window Functions**:
-   - Using window functions like `NTILE`, `LAG`, and `DENSE_RANK` to perform advanced analytics.
-   - Understanding how to partition data and apply window functions for ranking and trend analysis.
-
-5. **Common Table Expressions (CTEs)**:
-   - Utilizing `WITH` clauses to create temporary result sets for complex queries.
-   - Breaking down complex problems into manageable parts using CTEs.
-
-6. **Joining Tables**:
-   - Joining multiple tables to combine data from different sources.
-   - Understanding different types of joins (e.g., `INNER JOIN`, `LEFT JOIN`, `CROSS JOIN`, `SELF JOIN`, `FULL OUTER JOIN`) and their applications.
-
-7. **Statistical Functions**:
-   - Calculating percentiles, z-scores, and other statistical measures.
-
-8. **Numerical Rounding and Formatting**:
-   - Using `ROUND` and data type casting to format numerical data for better readability.
-   - Applying numerical rounding to ensure accurate calculations.
-
-9. **Stored Procedures**:
-   - Creating and executing stored procedures to encapsulate and reuse complex SQL logic.
-   - Using `CREATE PROCEDURE` to define stored procedures for repeated tasks.
-
-10. **PostgreSQL Functions**:
-    - Creating user-defined functions using `CREATE FUNCTION` to encapsulate reusable logic.
-    - Utilizing SQL languages to define functions for complex calculations and operations.
-
-By applying these skills and techniques, a comprehensive analysis of customer demographics, behavior, and product trends was conducted, providing valuable insights for targeted marketing, product development, and customer retention strategies.
 
